@@ -1,0 +1,23 @@
+# DDPG - CartPole
+params:
+  n_epochs: 100
+  steps_per_epoch: 4000
+  start_steps: 10000
+  update_after: 1000
+  # update_every: 50
+
+  gamma: 0.99
+  tau: 0.995
+  eps_start: 0.9
+  eps_decay: 100
+  eps_end: 0.05
+  lr: 0.001
+  replay_size: 1000000
+  batch_size: 100
+
+  n_hidden_layers: 2
+  n_neurons: 64
+
+  change_terminal_rew: True
+  # q_layers: (256, 256)
+  # batch_norm: True
