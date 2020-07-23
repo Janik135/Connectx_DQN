@@ -3,7 +3,7 @@ from gym.spaces import Discrete
 
 
 class QNet(nn.Module):
-    def __init__(self, env, n_hidden_layers=2, n_neurons=64):
+    def __init__(self, env, n_hidden_layers=2, n_neurons=64, batch_norm=False):
         super(QNet, self).__init__()
 
         self.action_space = env.action_space.n if isinstance(env.action_space, Discrete) \
@@ -14,8 +14,10 @@ class QNet(nn.Module):
         sizes = [self.observation_space] + [n_neurons for _ in range(n_hidden_layers)] + [self.action_space]
         layers = []
         for i in range(n_hidden_layers + 1):
+            if i < n_hidden_layers and batch_norm:
+                layers.append(nn.BatchNorm1d(sizes[i]))
             layers.append(nn.Linear(sizes[i], sizes[i + 1]))
-            if i < n_hidden_layers - 2:
+            if i < n_hidden_layers:
                 layers.append(nn.ReLU())
         self.layers = nn.Sequential(*layers)
 

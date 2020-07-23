@@ -10,17 +10,17 @@ def save_tb_scalars(writer, epoch, **kwargs):
     print(summary_string)
 
 
-def unique_path(path):
+def unique_path(path, name):
     """
 
     :str path: path which should not be overridden
     """
-    if os.path.exists(path):
+    if os.path.exists(os.path.join(path, name)):
         expand = 1
         not_finished = True
         while not_finished:
-            if os.path.exists(path + "_{}".format(expand)):
+            if os.path.exists(os.path.join(path, name + "_{}".format(expand))):
                 expand += 1
             else:
-                return path + "_{}".format(expand)
-    return path
+                return name + "_{}".format(expand)
+    return name

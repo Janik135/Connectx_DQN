@@ -69,15 +69,16 @@ def run_single_experiment(args=None):
                                              args.name)
             args.checkpoint_path = os.path.join('out', 'experiments', '_'.join(args.name.split('_')[:-1]), 'models',
                                                 args.name)
-        elif args.resume:
-            args.summary_path = os.path.join('out', 'summary', args.name)
-            args.checkpoint_path = os.path.join('out', 'models', args.name)
+        elif args.resume or args.eval:
+            args.summary_path = os.path.join('out', args.name, 'summary')
+            args.checkpoint_path = os.path.join('out', args.name, 'models')
         else:
-            args.summary_path = unique_path(os.path.join('out', 'summary', args.name))
-            args.checkpoint_path = os.path.join('out', 'models', args.name)
+            args.name = unique_path('out', args.name)
+            args.summary_path = os.path.join('out', args.name, 'summary')
+            args.checkpoint_path = os.path.join('out', args.name, 'models')
             # make sure the necessary directories exist
-            if not args.eval:
-                os.makedirs(args.summary_path, exist_ok=True)
+            # if not args.eval:
+            os.makedirs(args.summary_path, exist_ok=True)
             os.makedirs(args.checkpoint_path, exist_ok=True)
 
         args = vars(args)
