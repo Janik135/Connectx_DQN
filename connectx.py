@@ -75,7 +75,7 @@ class ConnectX(gym.Env):
         self.trainer = self.env.train(self.pair)
         self.side = 1 - self.side % 2
 
-"""# DQN"""
+"""# dqn_cartpole"""
 
 class Replay:
     def __init__(self, capacity=1e4):

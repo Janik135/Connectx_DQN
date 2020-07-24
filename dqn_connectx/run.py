@@ -1,3 +1,4 @@
+from kaggle_envs.connect_x import ConnectX
 import argparse
 import os
 from pprint import pprint
@@ -15,6 +16,7 @@ def _parse():
                                      description='Solve the different gym environments')
     parser.add_argument('--name', type=str, required=True, help='identifier to store experiment results')
     parser.add_argument('--env', type=str, required=True, help='name of the environment to be learned')
+    parser.add_argument('--opponent', type=str, default='random', help='Choose an opponent to train against')
 
     parser.add_argument('--seed', type=int, help='seed for torch/numpy/gym to make experiments reproducible')
 
@@ -26,6 +28,7 @@ def _parse():
 
     group = parser.add_mutually_exclusive_group()
     group.add_argument('--eval', action='store_true', help='toggles evaluation mode')
+    group.add_argument('--play', action='store_true', help='toggles play mode')
     group.add_argument('--resume', action='store_true',
                        help='resume training on an existing model by loading the last checkpoint')
 
@@ -95,6 +98,7 @@ def run_single_experiment(args=None):
     args['eval'] = args['eval'] if 'eval' in args else False
     args['resume'] = args['resume'] if 'resume' in args else False
     args['seed'] = args['seed'] if 'seed' in args else None
+    args['opponent'] = args['opponent'] if 'opponent' in args else None
 
     if not args['resume'] and not args['eval']:
         # save arguments
@@ -103,8 +107,8 @@ def run_single_experiment(args=None):
             yaml.dump({'params': args}, outfile, default_flow_style=None)
             print('saved args! location:', os.path.join(args['checkpoint_path'], 'params.yaml'))
 
-    # create gym environment
-    args['env'] = gym.make(args['env'])
+    # create kaggle environment
+    args['env'] = {'CONNECTX': ConnectX}[args['env'].upper()]()
 
     # seed gym environment if given
     if args['seed'] is not None:
@@ -117,7 +121,11 @@ def run_single_experiment(args=None):
     print(model)
     if 'eval' in args and args['eval']:
         model.evaluate(args['n_eval_traj'], print_reward=True)
+    # elif 'play' in args and args['play']:
+
     else:
+        if args['opponent'] is not None:
+            model.env.change_opponent(args['opponent'])
         model.train()
     args['env'].close()
 
