@@ -15,7 +15,7 @@ To use the Algorithms will require python3 (>=3.6.5).
 ### ConnectX
 * Train DQN on Kaggle's ConnectX environment:
     ```bash
-    python3 path/to/connectx.py --env Qube-v0 --save_path furuta_model.pt --log_name furuta_log
+    python3 path/to/connectx.py
     ```
 
 ### Testing
